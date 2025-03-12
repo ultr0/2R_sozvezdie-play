@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обратный отсчёт</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <style>
+        .time-section {
+            min-width: 140px; /* Фиксированная ширина для каждого сегмента */
+            text-align: center;
+        }
+
+        .colon {
+            width: 40px; /* Фиксированная ширина для разделителей */
+            text-align: center;
+        }
+
+        @media (max-width: 640px) {
+            .time-section {
+                min-width: 100px;
+            }
+
+            .colon {
+                width: 30px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900  h-screen">
+<div id="app" class="h-full flex flex-col items-center justify-center"
+     :class="{'fixed inset-0 w-full h-full': isFullscreen}">
+    <div class="text-white text-[23vw] font-bold font-[Comfortaa] text-center">
+        <div class="flex justify-center space-x-2">
+            <div class="flex flex-col items-center">
+                <span>{{ formattedHours }}</span>
+                <span class="text-3xl mt-2">часы</span>
+            </div>
+            <span>:</span>
+            <div class="flex flex-col items-center">
+                <span>{{ formattedMinutes }}</span>
+                <span class="text-3xl mt-2">минуты</span>
+            </div>
+            <span>:</span>
+            <div class="flex flex-col items-center">
+                <span>{{ formattedSeconds }}</span>
+                <span class="text-3xl  mt-2">секунды</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-12 flex space-x-4">
+        <button @click="toggleTimer" class="p-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition">
+            <i :class="isRunning ? 'fa-pause' : 'fa-play'" class="fa-solid text-white text-xl"></i>
+        </button>
+        <button @click="resetTimer" :disabled="isRunning"
+                class="p-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition disabled:opacity-50">
+            <i class="fa-solid fa-rotate text-white text-xl"></i>
+        </button>
+        <!--            <button @click="toggleFullscreen" class="p-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition">-->
+        <!--                <i :class="isFullscreen ? 'fa-compress' : 'fa-expand'" class="fa-solid text-white text-xl"></i>-->
+        <!--            </button>-->
+    </div>
+</div>
+
+<script>
+    const {createApp} = Vue;
+
+    createApp({
+        data() {
+            return {
+                totalSeconds: 0,
+                initialSeconds: 0,
+                isRunning: false,
+                timer: null,
+                isFullscreen: false,
+                audioContext: null,
+                lastPlayed: null
+            }
+        },
+        created() {
+            const params = new URLSearchParams(window.location.search);
+            const hours = parseInt(params.get('hours')) || 0;
+            const minutes = parseInt(params.get('minutes')) || 0;
+            const seconds = parseInt(params.get('seconds')) || 0;
+
+            this.initialSeconds = this.totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+        },
+        computed: {
+            formattedHours() {
+                return Math.floor(this.totalSeconds / 3600).toString().padStart(2, '0');
+            },
+            formattedMinutes() {
+                return Math.floor((this.totalSeconds % 3600) / 60).toString().padStart(2, '0');
+            },
+            formattedSeconds() {
+                return (this.totalSeconds % 60).toString().padStart(2, '0');
+            }
+        },
+        methods: {
+            toggleTimer() {
+                if (this.isRunning) {
+                    this.pauseTimer();
+                } else {
+                    this.startTimer();
+                }
+            },
+            startTimer() {
+                if (this.totalSeconds <= 0) return;
+
+                this.isRunning = true;
+                this.timer = setInterval(() => {
+                    this.totalSeconds--;
+                    this.checkTimeNotifications();
+
+                    if (this.totalSeconds <= 0) {
+                        this.playGong();
+                        this.pauseTimer();
+                    }
+                }, 1000);
+            },
+            pauseTimer() {
+                this.isRunning = false;
+                clearInterval(this.timer);
+            },
+
+            checkTimeNotifications() {
+                if (this.totalSeconds === 600 && this.lastPlayed !== 600) {
+                    this.playBeep(1);
+                    this.lastPlayed = 600;
+                } else if (this.totalSeconds === 300 && this.lastPlayed !== 300) {
+                    this.playBeep(2);
+                    this.lastPlayed = 300;
+                } else if (this.totalSeconds === 60 && this.lastPlayed !== 60) {
+                    this.playBeep(3);
+                    this.lastPlayed = 60;
+                }
+
+                // Сбрасываем lastPlayed при переходе через пороговые значения
+                if (this.totalSeconds > 600 && this.lastPlayed === 600) this.lastPlayed = null;
+                if (this.totalSeconds > 300 && this.lastPlayed === 300) this.lastPlayed = null;
+                if (this.totalSeconds > 60 && this.lastPlayed === 60) this.lastPlayed = null;
+            },
+
+            resetTimer() {
+                if (!this.isRunning) {
+                    this.totalSeconds = this.initialSeconds;
+                    this.lastPlayed = null; // Сбрасываем при ресете
+                }
+            },
+            playBeep(times) {
+                if (!this.audioContext) this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                for (let i = 0; i < times; i++) {
+                    setTimeout(() => {
+                        const oscillator = this.audioContext.createOscillator();
+                        const gainNode = this.audioContext.createGain();
+
+                        oscillator.connect(gainNode);
+                        gainNode.connect(this.audioContext.destination);
+
+                        oscillator.type = 'square';
+                        oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(0.5, this.audioContext.currentTime);
+                        // gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.3);
+                        oscillator.start();
+                        oscillator.stop(this.audioContext.currentTime + 0.4);
+                        sleep();
+                    }, i * 800);
+                }
+            },
+            playGong() {
+                if (!this.audioContext) this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioContext.destination);
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(300, this.audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.9, this.audioContext.currentTime);
+
+                oscillator.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 5);
+                oscillator.stop(this.audioContext.currentTime + 5);
+            },
+            toggleColorScheme() {
+                this.isFullscreen = !this.isFullscreen;
+            }
+        }
+    }).mount('#app');
+</script>
+</body>
+</html>
