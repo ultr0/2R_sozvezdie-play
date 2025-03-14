@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Обратный отсчёт</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <link href="src/style.prod.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="src/style.prod.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         .bg--black {
             background-image: url(bg-black-prof.png);
@@ -29,13 +28,9 @@
 <body>
 <div id="app">
     <div class="h-screen flex flex-col items-center justify-center"
-         :class="{ 'bg--black': isBlackColorScheme, 'bg--green': !isBlackColorScheme }">
+         :class="{ 'bg--black': colorScheme === 'black', 'bg--green': colorScheme === 'green' }">
 
         <div class="flex pr-2 m-2 space-x-4 w-full justify-end">
-            <button @click="toggleColorScheme"
-                    class="pt-2 pb-2 pl-4 pr-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition">
-                <i :class=" isBlackColorScheme ? 'fa-solid' : 'fa-regular'" class="fa-image text-white text-xl"></i>
-            </button>
             <button @click="toggleFullScreen"
                     class="pt-2 pb-2 pl-4 pr-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition">
                 <i :class="isFullscreen ? 'fa-compress' : 'fa-expand'" class="fa-solid text-white text-xl"></i>
@@ -44,8 +39,83 @@
                     class="pt-2 pb-2 pl-4 pr-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition">
                 <i :class="isOpenSettings ? 'fa-xmark' : 'fa-gear'" class="fa-solid text-white text-xl"></i>
             </button>
-
         </div>
+
+        <div v-if="isOpenSettings"
+             class="fixed top-0 right-0 w-60 h-full bg-gray-800 text-gray-200 shadow-lg p-4 z-50 overflow-y-auto flex flex-col justify-between">
+            <div class="">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">Настройки</h2>
+                    <button @click="isOpenSettings = false" class="text-gray-500 hover:text-gray-400">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="font-semibold mb-2">Время таймера</h3>
+                    <div class="flex gap-2">
+                        <div class="flex-1">
+                            <label class="block text-sm mb-1">Часы</label>
+                            <input type="number" min="0" v-model.number="hours" class="w-full p-2 border rounded">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-sm mb-1">Минуты</label>
+                            <input type="number" min="0" max="59" v-model.number="minutes"
+                                   class="w-full p-2 border rounded">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-sm mb-1">Секунды</label>
+                            <input type="number" min="0" max="59" v-model.number="seconds"
+                                   class="w-full p-2 border rounded">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="font-semibold mb-2">Звук</h3>
+                    <button @click="soundEnabled = !soundEnabled"
+                            :class="soundEnabled ? 'color bg-yellow-500 hover:bg-yellow-600' : 'text-black bg-gray-200 hover:bg-gray-300'"
+                            class="p-2 rounded-full">
+                        <i :class="soundEnabled ? 'fa-volume-high' : 'fa-volume-xmark'" class="fa-solid"></i>
+                    </button>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="font-semibold mb-2">Уведомления</h3>
+                    <div v-for="(notification, index) in notifications" :key="index"
+                         class="flex gap-2 mb-2 w-full max-w-full items-end">
+                        <div class="w-3/6">
+                            <label class="block text-sm mb-1">Время (сек)</label>
+                            <input type="number" min="1" v-model.number="notification.time" placeholder="Время (сек)"
+                                   class="p-2 w-full border rounded">
+                        </div>
+                        <div class="w-2/6">
+                            <label class="block text-sm mb-1">Сигналы</label>
+                            <input type="number" min="1" v-model.number="notification.count" placeholder="Количество"
+                                   class="w-2/6 w-full p-2 border rounded">
+                        </div>
+                        <button @click="removeNotification(index)"
+                                class="w-1/6 bg-red-500 h-[2rem] mb-2 text-white rounded-full hover:bg-red-600">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    <button @click="addNotification"
+                            class="mt-2 p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600">
+                        <i class="fa-solid fa-plus"></i> Добавить уведомление
+                    </button>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="font-semibold mb-2">Тема оформления</h3>
+                    <select v-model="colorScheme" class="w-full p-2 border rounded bg-gray-800">
+                        <option value="black">Тёмная</option>
+                        <option value="green">Зелёная</option>
+                    </select>
+                </div>
+            </div>
+            <span>Цифровые проекты КДЦ &quot;Созвездие&quot; &copy; 2025</span>
+        </div>
+
         <div class="text-white text-[20vw] font-bold font-[Inter] text-center">
             <div class="flex justify-center space-x-2">
                 <div class="flex flex-col items-center">
@@ -60,7 +130,7 @@
                 <span>:</span>
                 <div class="flex flex-col items-center">
                     <span>{{ formattedSeconds }}</span>
-                    <span class="text-3xl  mt-2">секунды</span>
+                    <span class="text-3xl mt-2">секунды</span>
                 </div>
             </div>
         </div>
@@ -74,9 +144,7 @@
                     class="pt-2 pb-2 pl-4 pr-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition disabled:opacity-50">
                 <i class="fa-solid fa-rotate text-white text-xl"></i>
             </button>
-
         </div>
-        
     </div>
 </div>
 
@@ -90,10 +158,12 @@
                 initialSeconds: 0,
                 isRunning: false,
                 timer: null,
-                isBlackColorScheme: true,
                 isFullscreen: false,
                 isOpenSettings: false,
                 audioContext: null,
+                soundEnabled: true,
+                notifications: [],
+                colorScheme: 'black'
             }
         },
         created() {
@@ -113,24 +183,57 @@
             },
             formattedSeconds() {
                 return (this.totalSeconds % 60).toString().padStart(2, '0');
+            },
+            hours: {
+                get() {
+                    return Math.floor(this.initialSeconds / 3600)
+                },
+                set(val) {
+                    this.updateTime(val, this.minutes, this.seconds)
+                }
+            },
+            minutes: {
+                get() {
+                    return Math.floor((this.initialSeconds % 3600) / 60)
+                },
+                set(val) {
+                    this.updateTime(this.hours, val, this.seconds)
+                }
+            },
+            seconds: {
+                get() {
+                    return this.initialSeconds % 60
+                },
+                set(val) {
+                    this.updateTime(this.hours, this.minutes, val)
+                }
+            }
+        },
+        watch: {
+            initialSeconds(newVal) {
+                const url = new URL(window.location);
+                url.searchParams.set('hours', this.hours);
+                url.searchParams.set('minutes', this.minutes);
+                url.searchParams.set('seconds', this.seconds);
+                window.history.replaceState(null, '', url);
             }
         },
         methods: {
+            updateTime(h, m, s) {
+                h = Math.max(0, parseInt(h) || 0);
+                m = Math.max(0, Math.min(59, parseInt(m) || 0));
+                s = Math.max(0, Math.min(59, parseInt(s) || 0));
+                this.initialSeconds = h * 3600 + m * 60 + s;
+            },
             toggleTimer() {
-                if (this.isRunning) {
-                    this.pauseTimer();
-                } else {
-                    this.startTimer();
-                }
+                this.isRunning ? this.pauseTimer() : this.startTimer();
             },
             startTimer() {
                 if (this.totalSeconds <= 0) return;
-
                 this.isRunning = true;
                 this.timer = setInterval(() => {
                     this.totalSeconds--;
                     this.checkTimeNotifications();
-
                     if (this.totalSeconds <= 0) {
                         this.playGong();
                         this.pauseTimer();
@@ -141,60 +244,45 @@
                 this.isRunning = false;
                 clearInterval(this.timer);
             },
-
+            resetTimer() {
+                if (!this.isRunning) this.totalSeconds = this.initialSeconds;
+            },
             checkTimeNotifications() {
-                const thresholds = [
-                    {time: 600, beepCount: 1},
-                    {time: 300, beepCount: 2},
-                    {time: 60, beepCount: 3}
-                ];
-                thresholds.forEach(({time, beepCount}) => {
-                    if (this.totalSeconds === time) {
-                        this.playBeep(beepCount);
+                this.notifications.forEach(notification => {
+                    if (this.totalSeconds === notification.time) {
+                        this.playBeep(notification.count);
                     }
                 });
             },
-
-            resetTimer() {
-                if (!this.isRunning) {
-                    this.totalSeconds = this.initialSeconds;
-                }
-            },
             playBeep(times) {
-                //звонок генерируем
+                if (!this.soundEnabled) return;
                 if (!this.audioContext) this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
                 for (let i = 0; i < times; i++) {
                     setTimeout(() => {
                         const oscillator = this.audioContext.createOscillator();
                         const gainNode = this.audioContext.createGain();
-
                         oscillator.connect(gainNode);
                         gainNode.connect(this.audioContext.destination);
-
                         oscillator.type = 'square';
                         oscillator.frequency.setValueAtTime(700, this.audioContext.currentTime);
                         gainNode.gain.setValueAtTime(0.5, this.audioContext.currentTime);
-                        // gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.3);
                         oscillator.start();
                         oscillator.stop(this.audioContext.currentTime + 0.3);
                     }, i * 400);
                 }
             },
             playGong() {
-                //гонг генерируем
+                if (!this.soundEnabled) return;
                 if (!this.audioContext) this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
                 const oscillator = this.audioContext.createOscillator();
                 const gainNode = this.audioContext.createGain();
-
                 oscillator.connect(gainNode);
                 gainNode.connect(this.audioContext.destination);
-
                 oscillator.type = 'sine';
                 oscillator.frequency.setValueAtTime(300, this.audioContext.currentTime);
                 gainNode.gain.setValueAtTime(1, this.audioContext.currentTime);
-
                 oscillator.start();
                 gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 5);
                 oscillator.stop(this.audioContext.currentTime + 5);
@@ -208,11 +296,14 @@
                     this.isFullscreen = false;
                 }
             },
-            toggleColorScheme() {
-                this.isBlackColorScheme = !this.isBlackColorScheme;
-            },
             toggleSettings() {
                 this.isOpenSettings = !this.isOpenSettings;
+            },
+            addNotification() {
+                this.notifications.push({time: 0, count: 1});
+            },
+            removeNotification(index) {
+                this.notifications.splice(index, 1);
             }
         }
     }).mount('#app');
