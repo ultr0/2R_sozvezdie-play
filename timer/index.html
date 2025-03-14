@@ -5,31 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Обратный отсчёт</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="src/style.prod.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
     <style>
-        .time-section {
-            min-width: 140px; /* Фиксированная ширина для каждого сегмента */
-            text-align: center;
-        }
-
-        .colon {
-            width: 40px; /* Фиксированная ширина для разделителей */
-            text-align: center;
-        }
-
-        @media (max-width: 640px) {
-            .time-section {
-                min-width: 100px;
-            }
-
-            .colon {
-                width: 30px;
-            }
-        }
-
         .bg--black {
             background-image: url(bg-black-prof.png);
             background-color: #000;
@@ -48,8 +28,24 @@
 </head>
 <body>
 <div id="app">
-    <div class="h-screen h-full flex flex-col items-center justify-center"
+    <div class="h-screen flex flex-col items-center justify-center"
          :class="{ 'bg--black': isBlackColorScheme, 'bg--green': !isBlackColorScheme }">
+
+        <div class="flex pr-2 m-2 space-x-4 w-full justify-end">
+            <button @click="toggleColorScheme"
+                    class="pt-2 pb-2 pl-4 pr-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition">
+                <i :class=" isBlackColorScheme ? 'fa-solid' : 'fa-regular'" class="fa-image text-white text-xl"></i>
+            </button>
+            <button @click="toggleFullScreen"
+                    class="pt-2 pb-2 pl-4 pr-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition">
+                <i :class="isFullscreen ? 'fa-compress' : 'fa-expand'" class="fa-solid text-white text-xl"></i>
+            </button>
+            <button @click="toggleSettings"
+                    class="pt-2 pb-2 pl-4 pr-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition">
+                <i :class="isOpenSettings ? 'fa-xmark' : 'fa-gear'" class="fa-solid text-white text-xl"></i>
+            </button>
+
+        </div>
         <div class="text-white text-[20vw] font-bold font-[Inter] text-center">
             <div class="flex justify-center space-x-2">
                 <div class="flex flex-col items-center">
@@ -70,20 +66,17 @@
         </div>
 
         <div class="mt-12 flex space-x-4">
-            <button @click="toggleTimer" class="p-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition">
+            <button @click="toggleTimer"
+                    class="pt-2 pb-2 pl-4 pr-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition">
                 <i :class="isRunning ? 'fa-pause' : 'fa-play'" class="fa-solid text-white text-xl"></i>
             </button>
             <button @click="resetTimer" :disabled="isRunning"
-                    class="p-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition disabled:opacity-50">
+                    class="pt-2 pb-2 pl-4 pr-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition disabled:opacity-50">
                 <i class="fa-solid fa-rotate text-white text-xl"></i>
             </button>
-            <button @click="toggleFullScreen" class="p-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition">
-                <i :class="isFullscreen ? 'fa-compress' : 'fa-expand'" class="fa-solid text-white text-xl"></i>
-            </button>
-            <button @click="toggleColorScheme" class="p-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition">
-                <i :class=" isBlackColorScheme ? 'fa-solid' : 'fa-regular'" class="fa-image text-white text-xl"></i>
-            </button>
+
         </div>
+        
     </div>
 </div>
 
@@ -99,6 +92,7 @@
                 timer: null,
                 isBlackColorScheme: true,
                 isFullscreen: false,
+                isOpenSettings: false,
                 audioContext: null,
             }
         },
@@ -215,8 +209,10 @@
                 }
             },
             toggleColorScheme() {
-                console.log(this.isBlackColorScheme);
                 this.isBlackColorScheme = !this.isBlackColorScheme;
+            },
+            toggleSettings() {
+                this.isOpenSettings = !this.isOpenSettings;
             }
         }
     }).mount('#app');
