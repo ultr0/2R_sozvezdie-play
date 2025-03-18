@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Обратный отсчёт</title>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js"></script>
     <link rel="stylesheet" href="src/style.prod.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -92,7 +92,7 @@
                         <div class="w-2/6">
                             <label class="block text-sm mb-1">Сигналы</label>
                             <input type="number" min="1" v-model.number="notification.count" placeholder="Количество"
-                                   class="w-2/6 w-full p-2 border rounded">
+                                   class="w-full p-2 border rounded">
                         </div>
                         <button @click="removeNotification(index)"
                                 class="w-1/6 bg-red-500 h-[2rem] mb-2 text-white rounded-full hover:bg-red-600">
@@ -108,12 +108,14 @@
                 <div class="mb-6">
                     <h3 class="font-semibold mb-2">Тема оформления</h3>
                     <select v-model="colorScheme" class="w-full p-2 border rounded bg-gray-800">
-                        <option value="black">Тёмная</option>
-                        <option value="green">Зелёная</option>
+                        <option value="black">Тёмная (Профессионалы)</option>
+                        <option value="green">Зелёная (Профессионалы)</option>
                     </select>
                 </div>
             </div>
-            <span>Цифровые проекты КДЦ &quot;Созвездие&quot; &copy; 2025</span>
+            <span><a href="https://play.kdcsozvezdie.ru/" title="Страница Цифровых проектов" target="_blank">Цифровые проекты</a> <a
+                    href="https://kdcsozvezdie.ru" target="_blank"
+                    title="Официальный сайт">КДЦ &quot;Созвездие&quot;</a> &copy; 2025</span>
         </div>
 
         <div class="text-white text-[20vw] font-bold font-[Inter] text-center">
