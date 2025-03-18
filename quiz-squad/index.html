@@ -1,0 +1,85 @@
+<!-- =========
+
+	Template Name: Play
+	Author: UIdeck
+	Author URI: https://uideck.com/
+	Support: https://uideck.com/support/
+	Version: 1.1
+
+========== -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Созвездие.Игровая | Результаты тест</title>
+
+    <!--====== Favicon Icon ======-->
+    <link
+            rel="shortcut icon"
+            href="../excursion/assets/images/favicon.svg"
+            type="image/svg"
+    />
+
+    <!-- ===== All CSS files ===== -->
+    <link rel="stylesheet" href="../excursion/assets/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../excursion/assets/css/animate.css"/>
+    <link rel="stylesheet" href="../excursion/assets/css/lineicons.css"/>
+    <link rel="stylesheet" href="../excursion/assets/css/ud-styles.css"/>
+</head>
+<body>
+
+<!-- ====== Banner Start ====== -->
+<section class="ud-page-banner">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ud-banner-content">Результат:
+                    <h1>Результат</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ====== Banner End ====== -->
+
+<!-- ====== About Start ====== -->
+
+<!-- ====== About End ====== -->
+
+<!-- ====== Footer End ====== -->
+
+<!-- ====== Back To Top Start ====== -->
+<a href="javascript:void(0)" class="back-to-top">
+    <i class="lni lni-chevron-up"> </i>
+</a>
+<!-- ====== Back To Top End ====== -->
+
+<!-- ====== All Javascript Files ====== -->
+<script>
+const options = ['Физическая Сила', 'Целеустремленность', 'Изобретательность', 'Дружелюбие'];
+
+function getRandomOption() {
+    const randomNumber = Math.random();
+
+    if (randomNumber < 0.25) {
+        return options[0];
+    } else if (randomNumber < 0.5) {
+        return options[1];
+    } else if (randomNumber < 0.75) {
+        return options[2];
+    } else {
+        return options[3];
+    }
+}
+
+const newText = getRandomOption();
+document.querySelector('h1').textContent = newText;
+</script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/wow.min.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

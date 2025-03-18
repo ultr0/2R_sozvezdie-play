@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html >
+<html lang="ru">
+<head>
+	<meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+	<title>Поздравляем с 8 марта!</title>
+    <script src="../js/easel.js" type="text/javascript"></script>
+	<script>
+        var leftSrc = "../images/Cypres 1.png";
+        var rightSrc = "../images/Cypres 2.png";
+        var leftImg;
+        var rightImg;
+        var loadedWings = 0;
+        var butterfly;
+        var butterflyLoaded = false;
+
+        function init() {
+	        // create a new stage and point it at our canvas:
+	        canvas = document.getElementById("canvas");
+	        stage = new Stage(canvas);
+
+            // loading left wing
+	        leftImg = new Image();
+	        leftImg.src = leftSrc;
+	        leftImg.onload = onWingImageLoaded;
+
+            // loading right wing
+	        rightImg = new Image();
+	        rightImg.src = rightSrc;
+	        rightImg.onload = onWingImageLoaded;
+
+            // subscribe to Ticker
+	        Ticker.addListener(window);
+        }
+
+        function onWingImageLoaded(event) {
+	        loadedWings++;
+	        if (loadedWings == 2)
+	            onButterflyReady();
+        }
+
+        function onButterflyReady() {
+            // create a new container for butterfly wings
+	        butterfly = new Container();
+            // create wings
+            butterfly.lWing = new Bitmap(leftImg);
+            butterfly.rWing = new Bitmap(rightImg);
+
+            // assemble a batterfly
+            butterfly.addChild(butterfly.lWing);
+            butterfly.addChild(butterfly.rWing);
+
+            // change wings registration point inside container
+            butterfly.lWing.regX = butterfly.lWing.image.width;
+            butterfly.lWing.regY = butterfly.lWing.image.height / 2;
+            butterfly.rWing.regX = 0;
+            butterfly.rWing.regY = butterfly.rWing.image.height / 2;
+
+            
+            // add butterfly to stage
+	        stage.addChild(butterfly);
+
+            // change batterfly position
+	        butterfly.x = canvas.width * Math.random() | 0;
+	        butterfly.y = canvas.height * Math.random() | 0;
+
+	        // initial rotation
+	        butterfly.lWing.rotation = butterfly.rWing.rotation
+                = butterfly.angle = 360 * Math.random() | 0;
+
+            // initial scale
+	        butterfly.scale = butterfly.lWing.scaleX
+                = butterfly.lWing.scaleY = butterfly.rWing.scaleX
+                = butterfly.rWing.scaleY = 0.5 + 0.2 * Math.random();
+
+	        // initial rotation
+	        butterfly.lWing.rotation = butterfly.rWing.rotation
+                = butterfly.angle = 360 * Math.random() | 0;
+            // movement direction
+	        butterfly.direction = 8 * Math.random() - 4.0;
+            // movement speed
+	        butterfly.speed = 5 * Math.random() + 5;
+
+            // animation steps
+	        butterfly.step = butterfly.steps = 40 + 60 * Math.random();
+
+            // move butterfly
+	        butterfly.move = function () {
+	            butterfly.angle += butterfly.direction + (5.0 * Math.random() - 2.5);
+                butterfly.lWing.rotation = butterfly.rWing.rotation = butterfly.angle;
+
+	            var wingAngle = (butterfly.steps - butterfly.step) / butterfly.steps * Math.PI;
+	            butterfly.lWing.scaleX = butterfly.rWing.scaleX
+                    = butterfly.scale * (0.4 + 0.6 * Math.abs(Math.cos(wingAngle * 4)));
+
+	            butterfly.x += (butterfly.speed * Math.sin((butterfly.angle) / 180.0 * Math.PI));
+	            butterfly.y -= (butterfly.speed * Math.cos((butterfly.angle) / 180.0 * Math.PI));
+
+	            butterfly.step--;
+	        }
+
+	        butterflyLoaded = true;
+
+            // redraw stage
+            stage.update();
+        }        
+
+        // update scene on each tick
+        function tick() {
+            if (butterflyLoaded && butterfly.step >= 0) {
+                butterfly.move()
+            }
+            stage.update();
+        }
+
+    </script>
+</head>
+<body onload="init();">
+	<div class="canvasHolder"><canvas id="canvas" width="992" height="736" ></canvas></div>    
+</body>
+</html>

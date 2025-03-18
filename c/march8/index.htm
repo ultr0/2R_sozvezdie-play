@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html >
+<html lang="ru">
+<head>
+	<meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+	<title>Поздравляем с 8 марта!</title>
+	<script src="js/easel.js" type="text/javascript"></script>
+    <script src="js/butterfly.js" type="text/javascript"></script>
+    <link href="styles.css" rel="stylesheet" type="text/css" />    
+	<script>
+		var canvas;
+		var stage;
+
+		var bfimgsrc = [{ left: "images/Didius 1.png", right: "images/Didius 2.png" },
+        { left: "images/Amphitrion 1.png", right: "images/Amphitrion 2.png" },
+        { left: "images/Catenarius 1.png", right: "images/Catenarius 2.png" },
+        { left: "images/Cyanides 1.png", right: "images/Cyanides 2.png" },
+        { left: "images/Cypres 1.png", right: "images/Cypres 2.png" },
+        { left: "images/Diana 1.png", right: "images/Diana 2.png" },
+        { left: "images/Hecuba 1.png", right: "images/Hecuba 2.png" },
+        { left: "images/Peleides 1.png", right: "images/Peleides 2.png" },
+        { left: "images/Polyphemus 1.png", right: "images/Polyphemus 2.png" },
+        { left: "images/Sulkowski 1.png", right: "images/Sulkowski 2.png"}];
+
+		var bfsimages = [];
+		var bfs = [];
+
+        function init() {
+	        // create a new stage and point it at our canvas:
+	        canvas = document.getElementById("canvas");
+	        stage = new Stage(canvas);
+	        stage.enableMouseOver(10);
+
+	        loadButterflyis(18);
+
+	        canvas.onclick = function(){
+                loadButterflyis(5);
+	        };
+
+            // subscribe to Ticker
+            Ticker.addListener(window);
+        }
+        
+        function loadButterflyis(count) {
+            for (var k = 0; k < count; k++) 
+            {
+                var i = Math.floor(bfimgsrc.length * Math.random());
+
+                var bfimages = {
+                    left: new Image(),
+                    right: new Image(),
+                    loadedWings: 0,
+                    onready: onButterflyImagesReady
+                };
+
+                // loading left wing
+                bfimages.left.src = bfimgsrc[i].left;
+                bfimages.left.onload = onWingImageLoaded;
+                bfimages.left.butterfly = bfimages;
+
+                // loading right wing
+                bfimages.right.src = bfimgsrc[i].right;
+                bfimages.right.onload = onWingImageLoaded;
+                bfimages.right.butterfly = bfimages;
+            }
+        }
+
+        function onWingImageLoaded(event) {
+            var image = event.target;
+            image.butterfly.loadedWings++;
+            if (image.butterfly.loadedWings == 2)
+                image.butterfly.onready(image.butterfly);
+        }
+
+        function onButterflyImagesReady(butterflyImgs) {
+            // create a new butterfly
+            var butterfly = new Butterfly(butterflyImgs.left, butterflyImgs.right);
+            
+            // add butterfly to stage
+            stage.addChild(butterfly);
+
+            // change batterfly position
+            butterfly.x = canvas.width * Math.random() | 0;
+            butterfly.y = canvas.height * Math.random() | 0;
+
+            bfs.push(butterfly);            
+        }
+
+        // update scene on each tick
+        function tick() {
+            for (var i = 0; i < bfs.length; i++) {
+                var butterfly = bfs[i];
+                if (butterfly.isActive()) 
+                {
+                    butterfly.move();
+                } 
+                else if (Math.random() > 0.999) 
+                {
+                    butterfly.reset();
+                }
+            }
+            stage.update();
+        }
+
+</script>
+</head>
+<body onload="init();">
+	<div class="canvasHolder"><canvas id="canvas" width="992" height="736" ></canvas></div>
+    <audio src="audio/ArrivalForest.mp3" autoplay loop/>
+    <div id="aboutMusic">
+       <small><b>Music</b>: <a href="http://www.freesound.org/samplesViewSingle.php?id=100399">Arrival Forest</a>, <i>recorded in the rainforest at St.Kitts Island in the Caribbean.<br /> The rain forest is located at the surroundings of Liamuiga Volcano </i></small>
+    </div>
+</body>
+</html>

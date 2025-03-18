@@ -1,0 +1,269 @@
+<!-- =========
+
+	Template Name: Play
+	Author: UIdeck
+	Author URI: https://uideck.com/
+	Support: https://uideck.com/support/
+	Version: 1.1
+
+========== -->
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Созвездие.Игровая | Экскурсия</title>
+
+    <!--====== Favicon Icon ======-->
+    <link
+            rel="shortcut icon"
+            href="../assets/images/favicon.svg"
+            type="image/svg"
+    />
+
+    <!-- ===== All CSS files ===== -->
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../assets/css/animate.css"/>
+    <link rel="stylesheet" href="../assets/css/lineicons.css"/>
+    <link rel="stylesheet" href="../assets/css/ud-styles.css"/>
+    <link rel="stylesheet" href="../assets/css/player.css"/>
+</head>
+<body>
+
+<!-- ====== Banner Start ====== -->
+<section class="ud-page-banner">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ud-banner-content">
+                    <h1>Экскурсия по Созвездию. Памятник Гагарину</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ====== Banner End ====== -->
+
+<!-- ====== About Start ====== -->
+<section id="about" class="ud-about">
+    <div class="container-fluid">
+        <div class="ud-about-wrapper wow fadeInUp" data-wow-delay=".2s">
+            <div class="ud-about-content-wrapper">
+                <div class="ud-about-content">
+                    <!-- jade: compressed-->
+                    <ul class="audio-players">
+                        <li>
+                            <div class="audio-player js-audio-player">
+                                <button class="audio-player__control js-control">
+                                    <div class="audio-player__control-icon"></div>
+                                </button>
+                                <h4 class="audio-player__title">Послушать рассказ</h4>
+                                <audio preload="auto">
+                                    <source src="../assets/audio/audio_gagarin.mp3"/>
+                                </audio>
+                                <img class="audio-player__cover" src="../assets/images/preview/gagarin.jpg"/>
+                                <video
+                                        preload="auto" loop="loop">
+                                    <source src="" type="video/mp4"/>
+                                </video>
+                            </div>
+                        </li>
+
+                    </ul>
+                    <p>
+                        Уважаемые гости, Вы находитесь в самом Центре «Созвездия», возле памятника великому русскому
+                        космонавту – Юрию Алексеевичу Гагарину. Он был первым человеком, покорившим космос.
+                        Память о нем навсегда сохранилась в истории «Созвездия», а в 2011 году был установлен этот
+                        мемориал.
+                    </p>
+                    <p>
+                        В 9 часов 57 минут по московскому времени Телеграфное Агентство Советского Союза передало
+                        сообщение: «12 апреля 1961 г. в Советском Союзе выведен на орбиту вокруг Земли первый в мире
+                        космический корабль-спутник „Восток“ с человеком на борту. Пилотом-космонавтом является
+                        гражданин СССР летчик Гагарин Юрий Алексеевич». Это первый человек, приблизившийся к звездам. Он
+                        тот, кто исполнил мечту всего народа - покорить космос. Именно благодаря сложной подготовке ему
+                        удалось достичь цели.</p>
+                    <p>
+                        Это место обладает особой энергетикой, из-за которой ваши желания о развитии в себе особых
+                        качеств могут исполниться. Вам нужно приложить руки к ладошкам у памятника и загадать желание о
+                        качествах, которые вы хотите улучшить в себе.
+                    </p>
+
+                </div>
+            </div>
+            <div class="ud-about-image">
+                <img src="../assets/images/map_gagarin.jpg" alt="about-image"/>
+            </div>
+        </div>
+    </div>
+</section><footer class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <span><a href="https://play.kdcsozvezdie.ru/" title="Страница Цифровых проектов" target="_blank">Цифровые проекты</a> <a
+                    href="https://kdcsozvezdie.ru" target="_blank"
+                    title="Официальный сайт">КДЦ &quot;Созвездие&quot;</a> &copy; 2022 г.</span>
+        </div>
+    </div>
+</footer>
+<!-- ====== About End ====== -->
+
+<!-- ====== Footer End ====== -->
+
+<!-- ====== Back To Top Start ====== -->
+<a href="javascript:void(0)" class="back-to-top">
+    <i class="lni lni-chevron-up"> </i>
+</a>
+<!-- ====== Back To Top End ====== -->
+
+<!-- ====== All Javascript Files ====== -->
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="../assets/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/wow.min.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+    var $player = $('.js-audio-player')
+        , $playbackClass = 'is-playing'
+        , $fadeDuration = 500
+
+    $player.each(function (index) {
+        var $this = $(this)
+            , id = 'audio-player-' + index
+
+        $this.attr('id', id)
+
+        $this.find('.js-control')[0].addEventListener('click', function () {
+            resetPlayback(id)
+            playback($this, $this.find('audio'), $this.find('video'))
+        })
+
+        // Reset state once audio has finished playing
+        $this.find('audio')[0].addEventListener('ended', function () {
+            resetPlayback()
+        })
+    })
+
+    function playback($player, $audio, $video) {
+        if ($audio[0].paused) {
+            $audio[0].play()
+            $video[0].play()
+            $audio.animate({volume: 1}, $fadeDuration)
+            $player.addClass($playbackClass)
+        } else {
+            $audio.animate({volume: 0}, $fadeDuration, function () {
+                $audio[0].pause()
+                $video[0].pause()
+            })
+            $player.removeClass($playbackClass)
+        }
+    }
+
+    function resetPlayback(id) {
+        $player.each(function () {
+            var $this = $(this)
+
+            if ($this.attr('id') !== id) {
+                $this.find('audio').animate({volume: 0}, $fadeDuration, function () {
+                    $(this)[0].pause()
+                    $this.find('video')[0].pause()
+                })
+                $this.removeClass($playbackClass)
+            }
+        })
+    }
+
+
+    var snow = {
+
+        wind: 0,
+        maxXrange: 100,
+        minXrange: 10,
+        maxSpeed: 2,
+        minSpeed: 1,
+        color: "#fff",
+        char: ".",
+        maxSize: 30,
+        minSize: 8,
+
+        flakes: [],
+        WIDTH: 0,
+        HEIGHT: 0,
+
+        init: function (nb) {
+            var o = this,
+                frag = document.createDocumentFragment();
+            o.getSize();
+
+
+            for (var i = 0; i < nb; i++) {
+                var flake = {
+                    x: o.random(o.WIDTH),
+                    y: -o.maxSize,
+                    xrange: o.minXrange + o.random(o.maxXrange - o.minXrange),
+                    yspeed: o.minSpeed + o.random(o.maxSpeed - o.minSpeed, 100),
+                    life: 0,
+                    size: o.minSize + o.random(o.maxSize - o.minSize),
+                    html: document.createElement("span")
+                };
+
+                flake.html.style.position = "absolute";
+                flake.html.style.top = flake.y + "px";
+                flake.html.style.left = flake.x + "px";
+                flake.html.style.fontSize = flake.size + "px";
+                flake.html.style.color = o.color;
+                flake.html.appendChild(document.createTextNode(o.char));
+
+                frag.appendChild(flake.html);
+                o.flakes.push(flake);
+            }
+
+            document.body.appendChild(frag);
+            o.animate();
+
+            window.onresize = function () {
+                o.getSize();
+            };
+        },
+
+        animate: function () {
+            var o = this;
+            for (var i = 0, c = o.flakes.length; i < c; i++) {
+                var flake = o.flakes[i],
+                    top = flake.y + flake.yspeed,
+                    left = flake.x + Math.sin(flake.life) * flake.xrange + o.wind;
+                if (top < o.HEIGHT - flake.size - 10 && left < o.WIDTH - flake.size && left > 0) {
+                    flake.html.style.top = top + "px";
+                    flake.html.style.left = left + "px";
+                    flake.y = top;
+                    flake.x += o.wind;
+                    flake.life += .01;
+                } else {
+                    flake.html.style.top = -o.maxSize + "px";
+                    flake.x = o.random(o.WIDTH);
+                    flake.y = -o.maxSize;
+                    flake.html.style.left = flake.x + "px";
+                    flake.life = 0;
+                }
+            }
+            setTimeout(function () {
+                o.animate();
+            }, 20);
+        },
+
+        random: function (range, num) {
+            var num = num ? num : 1;
+            return Math.floor(Math.random() * (range + 1) * num) / num;
+        },
+
+        getSize: function () {
+            this.WIDTH = document.body.clientWidth || window.innerWidth;
+            this.HEIGHT = document.body.clientHeight || window.innerHeight;
+        }
+
+    };
+
+</script>
+</body>
+</html>

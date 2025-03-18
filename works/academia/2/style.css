@@ -1,0 +1,217 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    margin: 0;
+}
+
+#main {
+    display: flex;
+    flex: 1;
+}
+
+#main > article {
+    flex: 1;
+}
+
+
+#main > aside {
+    flex: 0 0 20vw;
+    background: skyblue;
+}
+
+
+header {
+    background: lightblue;
+    height: 7rem;
+}
+
+footer {
+    background: lightblue;
+    height: 3rem;
+}
+
+header, footer, article, aside {
+    padding: 0.5rem;
+}
+
+@media screen and (max-width: 575px) {
+    #main {
+        display: block;
+    }
+}
+
+
+.header {
+    border: 2px solid #ccc;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .logo {
+    padding-left: 30px;
+}
+
+.header .menu ul {
+    display: flex;
+    list-style: none;
+}
+
+.header .menu ul li {
+    margin: 20px 10px;
+}
+
+.header .menu ul a {
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: bold;
+    color: blue;
+}
+
+.phone {
+    font-size: 110%;
+    color: darkblue;
+    padding-right: 40px;
+}
+
+@media screen and (max-width: 900px) {
+    .phone {
+        margin: auto;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .header {
+        flex-direction: column;
+    }
+
+    .header .menu ul {
+        flex-direction: column;
+        align-self: center;
+    }
+
+    .header .menu ul li {
+        margin: 5px;
+    }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+}
+
+.section {
+    margin: 60px 0 /* внешние отступы для блока - сверху и снизу по 60px, слева и справа по 0px */;
+}
+
+.container {
+    max-width: 1170px /* максимальная ширина контейнера */;
+    margin: 0 auto /* расположение контейнера по центру */;
+    padding: 0 30px /* внутренние отступы слева и справа по 30px, верхний и нижний отступы по 0px */;
+}
+
+.catalog__flex {
+    display: flex /* по умолчанию дочерние блоки(.catalog__col) будут располагаться в ряд */;
+    flex-wrap: wrap /* дочерние блоки переносятся на следующую строку, если ширина всех внутренних блоков превышает ширину родительского блока(.catalog__flex) */;
+    margin: 0 -15px -30px /* Отрицательные внешние отступы(значения противоположные значениям padding блока .catalog__col), чтобы компенсировать внутренние отступы дочерних блоков(.catalog__col), НЕ ДОЛЖЕН превышать боковых значений padding блока .container*/;
+}
+
+.catalog__col {
+    width: 25% /* Задаем ширину блока(по 4 блока в ряд)*/;
+    padding: 0 15px 30px /* Размер внутренних отступов блока - справа и слева по 15px(которые дают общий отступ 30px между блоками) и снизу отступ 30px */;
+}
+
+.card {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(33, 37, 41, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.card:hover {
+    box-shadow: 0 0 5px rgba(33, 37, 41, 0.1);
+}
+
+.card__title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.card__text {
+    flex: 1;
+}
+
+.card__button {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.card__button a {
+    display: inline-flex;
+    padding: 0 30px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    color: #212529;
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid #f7cb15;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.card__button a:hover {
+    border-color: transparent;
+    background: #f7cb15;
+}
+
+.img-fluid {
+    width: 100%
+}
+
+/* Адаптивность */
+@media (max-width: 1199.98px) {
+    .catalog__col {
+        width: 33.33333333% /* при ширине браузера меньше 1200px будет по 3 блока в ряд */;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .catalog__col {
+        width: 50% /* при ширине браузера меньше 992px будет по 2 блока в ряд */;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .catalog__col {
+        width: 100% /* при ширине браузера меньше 576px будет по 1 блоку */;
+    }
+}
+
+li.active a{
+    color: white !important;
+    font-weight: normal !important;
+}
+
